@@ -1,0 +1,76 @@
+---
+title: "Setup_and_Run"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Packages need to run tool 
+```{r packages}
+#first time running unquote the packages below and run. 
+
+#install.packages("tidyverse")
+#install.packages("seqinr")
+
+#packages will load automatically when loading script
+
+```
+
+## loading tools 
+How to run the genome comparison tools 
+
+It is recommended that if you are going to run many genomes to do it from command prompt or terminal using the running_script.R
+
+```{r tools, echo=FALSE}
+# run the code below to get all the necessary tools 
+source(file = "scripts/Genome_comparison_tool.R")
+
+#seven functions should have been loaded 
+```
+
+## Run tools
+
+```{r tools, echo=FALSE}
+ 
+# list all genomes 
+genomes <- list.files("genome_files", full.names = T)
+
+# To run the analysis you are required to provide ref genome and the query genomes,
+genome_ref <- genomes[str_detect("genome_files/Clostridium_kluyveri.faa", genomes)]
+# list of all genomes to be queried minus the reference genomome 
+genomes_query <-genomes[!str_detect(genome_ref, genomes)]
+#genomes_query <-c("genome_files/kuz1.faa",genomes )
+#create list of locus tags, from teh reference genomes or subsections can be selected for example: how to select a subset: locus_tags[1:?]
+locus_tags<-locus_tag_creation_vector(genome_ref)
+# selection can be made manually.as below 
+locus_tags<- c("Ckluy_00001","Ckluy_00002","Ckluy_00003")
+# 
+
+#run genome comparison tool 
+mult_genomes_comp<-Genome_comparison_tool(genomes_query,genome_ref,locus_tags)
+
+# create a wide version of the genome comparison  
+mult_genomes_comp_wide<-mult_genomes_comp %>% 
+  select(sequence_ref = ref_sequence, query_sequence, genome_query) %>% 
+  pivot_wider(sequence_ref, names_from = genome_query, values_from = query_sequence) 
+
+# Save outputs into csv
+# write.csv(mult_genomes_comp,"csv_files/mult_genomes_comp.csv")
+# write.csv(mult_genomes_comp_wide,"csv_files/mult_genomes_comp_wide.csv")
+
+# outputs can also be saved into rds which is recommended. 
+
+
+```
+
+Extra functions to obtain the locus_tags of the genes that did not align in the query sequences and in the reference genomes
+
+
+```{r extra functions, echo=F }
+
+source(file = "scripts/unmatch_gene_extractor.R")
+
+```
+
