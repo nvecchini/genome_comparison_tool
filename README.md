@@ -24,7 +24,7 @@ install.packages("seqinr")
 
 # How to Use
 
-Their are three available ways to run the tool: `Run_start_markdown.Rmd` , `running_script.R`, and `full_directory_run.R`
+There are three available ways to run the tool: `Run_start_markdown.Rmd` , `running_script.R`, and `full_directory_run.R`
 
 1. `Run_start_markdown.Rmd` allow you to run the tool directly from the Markdown
  - Instructions on how to use are in the markdown
